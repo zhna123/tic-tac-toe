@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Tic Tac Toe</title>
+
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <h1>Tic Tac Toe</h1>
+    <div class="player_form_container">
+        <form action="index.html" method="post" id="player_info">
+            <h2>Enter player information</h2>
+            <p>
+                <div>
+                    <label for="name1">Player1 name</label>
+                    <input type="text" placeholder="Enter name" name="name1" id="name1" required>
+                </div>
+            </p>
+            <p>
+                <div>
+                    <label for="name2">Player2 name</label>
+                    <input type="text" placeholder="Enter name" name="name2" id="name2" required>
+                </div>
+            </p>
+
+            <p>
+                <div>
+                    <input type="checkbox" id="computer" name="computer">
+                    <label for="computer">Play With Computer</label>
+                    <p> 
+                        <div class="levelTitle">Choose a level:</div> 
+                        <div class="level">
+                            <input type="radio" id="easy" name="level" value="easy" checked>
+                            <label for="easy">Easy</label>
+                        </div>
+                        <div class="level">
+                            <input type="radio" id="hard" name="level" value="hard">
+                            <label for="hard">Hard</label>
+                        </div>
+                    </p>
+                    <p> 
+                        <div class="symbolTitle">Choose your symbol:</div> 
+                        <div class="symbol">
+                            <input type="radio" id="o" name="symbol" value="o" checked>
+                            <label for="easy">O - Go first</label>
+                        </div>
+                        <div class="symbol">
+                            <input type="radio" id="x" name="symbol" value="x">
+                            <label for="hard">X - Go second</label>
+                        </div>
+                    </p>
+                </div>
+            </p>
+
+            <button type="submit">Start Game</button>
+        </form>
+    </div>
+    <div class="playerHint">
+        <h3>Player <span></span>'s turn</h3>
+    </div>
+    <div class="gameboard">
+        <div class="rowDiv">
+            <div class="colDiv"></div>
+            <div class="colDiv"></div>
+            <div class="colDiv"></div>
+        </div>
+        <div class="rowDiv">
+            <div class="colDiv"></div>
+            <div class="colDiv"></div>
+            <div class="colDiv"></div>
+        </div>
+        <div class="rowDiv">
+            <div class="colDiv"></div>
+            <div class="colDiv"></div>
+            <div class="colDiv"></div>
+        </div>
+    </div>
+    
+</body>
+</html>

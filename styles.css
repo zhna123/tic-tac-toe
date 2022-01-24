@@ -1,0 +1,75 @@
+html, body {
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.player_form_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.gameboard {
+    display: none;
+    flex-direction: column;
+    height: 300px;
+    width: 300px;
+    /* border: 1px solid black; */
+}
+
+.resultDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.btn {
+    margin-top:30px;
+}
+
+.rowDiv {
+    display: flex;
+    width: 100%;  
+    height: calc(100% / 3); 
+}
+
+.colDiv {
+    display: flex;
+    width: calc(100% / 3);
+    border: .1px solid gray;
+    margin-left: -1px;
+    margin-bottom: -1px;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    color: darkgray
+}
+
+.playerHint {
+    display: none;
+}
+
+.level {
+    display: none;
+}
+
+.levelTitle {
+    display: none;
+}
+
+.symbolTitle {
+    display: none;
+}
+
+.symbol {
+    display: none;
+}
