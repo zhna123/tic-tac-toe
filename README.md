@@ -4,3 +4,4 @@
 - Factory functions
 - Module pattern
 - Minimax & alpha-beta pruning (not yet implemented)
+- IIFE (Immediately invoked function expression)

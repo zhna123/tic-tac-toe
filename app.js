@@ -98,14 +98,25 @@ const GameBoard = function() {
         return -1;
     }
 
-    return {gameboard, spotAvailable, checkGameResults}
+    function showPlayerHint(document) {
+        document.querySelector('.playerHint').style.display = 'block';
+    }
+
+    function hidePlayerHint(document) {
+        document.querySelector('.playerHint').style.display = 'none';
+    }
+
+    return {gameboard, spotAvailable, checkGameResults, showPlayerHint, hidePlayerHint}
 }();
 
 const Game = function() {
 
+    const playerHintDiv = document.querySelector('.playerHint > h3 > span');
+    const gameboardDiv = document.querySelector('.gameboard');
+
     let currentPlayer;
 
-    const displayResult = function(gameboardDiv, path, displayText) {
+    const displayResult = function(path, displayText) {
         if (path !== 0) {
             const rowDivs = Array.from(document.querySelectorAll('.rowDiv'));
             rowDivs.forEach((row, rowInd) => {
@@ -119,14 +130,12 @@ const Game = function() {
                 })
             });
         }
-        setTimeout(showResultDiv, 500, gameboardDiv, displayText);
+        setTimeout(showResultDiv, 500, displayText);
     }
 
-    const showResultDiv = function(gameboardDiv, displayText) {
+    const showResultDiv = function(displayText) {
         gameboardDiv.style.display = "none";
-
-        const playerHintDiv = document.querySelector('.playerHint');
-        playerHintDiv.style.display = "none";
+        GameBoard.hidePlayerHint(document);
 
         const body = document.querySelector('body');
         const resultDiv = document.createElement("div");
@@ -147,7 +156,6 @@ const Game = function() {
     const start = function(player1, player2, level) {
         currentPlayer = player1;
         if (player1.name !== 'Computer' && player2.name !== 'Computer') {
-            const playerHintDiv = document.querySelector('.playerHint > h3 > span');
             playerHintDiv.textContent = currentPlayer.name;
         }
         // computer goes first
@@ -156,7 +164,6 @@ const Game = function() {
             currentPlayer = player2;
         }
 
-        const gameboardDiv = document.querySelector('.gameboard');
         const rowDiv = Array.from(gameboardDiv.querySelectorAll(".rowDiv"));
         rowDiv.forEach((row, rowInd) => {
             const colDiv = Array.from(row.querySelectorAll('.colDiv'));
@@ -168,12 +175,13 @@ const Game = function() {
                         event.target.textContent = currentPlayer.symbol;
                         GameBoard.gameboard[rowInd][colInd] = currentPlayer.symbol;
                     }
-                    if (!ischeckGameResults(gameboardDiv, currentPlayer.name)) {
+                    if (!hasGameResults(currentPlayer.name)) {
                         switchPlayers(player1, player2);
-
-                        computerMove(currentPlayer.symbol, level);
-                        if (!ischeckGameResults(gameboardDiv, currentPlayer.name)) {
-                            switchPlayers(player1, player2);
+                        if (currentPlayer.name === 'Computer') {
+                            computerMove(currentPlayer.symbol, level);
+                            if (!hasGameResults(currentPlayer.name)) {
+                                switchPlayers(player1, player2);
+                            }
                         }
                     }
                 })
@@ -181,16 +189,16 @@ const Game = function() {
         });
     }
 
-    const ischeckGameResults = function(gameboardDiv, playerName) {
+    const hasGameResults = function(playerName) {
         if  (Array.isArray(GameBoard.checkGameResults())) {
             console.log(`${playerName} won!`)
             console.log(GameBoard.checkGameResults())
-            displayResult(gameboardDiv, GameBoard.checkGameResults(), `${playerName} won!`)
+            displayResult(GameBoard.checkGameResults(), `${playerName} won!`)
             return true;
 
         }  else if (GameBoard.checkGameResults() === 0) {
             console.log(`A Tie.`)
-            displayResult(gameboardDiv, 0, `A tie!`)
+            displayResult(0, `A tie!`)
             return true;
         }
         return false;
@@ -228,7 +236,6 @@ const Game = function() {
 
         GameBoard.gameboard[rowInd][colInd] = symbol;
 
-        const gameboardDiv = document.querySelector('.gameboard');
         const rowDiv = Array.from(gameboardDiv.querySelectorAll(".rowDiv"));
         rowDiv.forEach((row, rInd) => {
             if (rInd === rowInd) {
@@ -253,6 +260,7 @@ const InformationForm = function(document) {
 
     const submitForm = function() {
         const form = document.querySelector("#player_info");
+        
         form.addEventListener("submit", function(e) {
             e.preventDefault();
             let player1;
@@ -264,7 +272,7 @@ const InformationForm = function(document) {
             if (player1Name && player2Name) {
                 player1 = Player(player1Name, 'O');
                 player2 = Player(player2Name, 'X')
-                showPlayerHint(document);
+                GameBoard.showPlayerHint(document);
             } else {
                 level = form.elements['level'].value;
                 if (level === 'hard') {
@@ -290,57 +298,57 @@ const InformationForm = function(document) {
         document.querySelector('.gameboard').style.display = 'flex';
     }
 
-    function showPlayerHint(document) {
-        document.querySelector('.playerHint').style.display = 'block';
+    // checkbox 
+    const checkbox = document.querySelector("#computer");
+    const player1Textbox = document.querySelector("#name1")
+    const player2Textbox = document.querySelector("#name2")
+    const levelTitle = document.querySelector(".levelTitle");
+    const levelRadio = Array.from(document.querySelectorAll(".level"));
+    const symbolTitle = document.querySelector(".symbolTitle");
+    const symbolRadio = Array.from(document.querySelectorAll(".symbol"));
+
+    const animateCheckboxes = function() {
+        checkbox.addEventListener("change", function(e) {
+
+            if (e.target.checked) {
+                player1Textbox.value = null;
+                player2Textbox.value = null;
+                player1Textbox.disabled = true;
+                player2Textbox.disabled = true;
+        
+                levelTitle.style.display = "block";
+                levelRadio.forEach(level => {
+                    level.style.display = "block";
+                })
+                symbolTitle.style.display = "block";
+                symbolRadio.forEach(symbol => {
+                    symbol.style.display = "block";
+                })
+            }
+            if (!e.target.checked) {
+                player1Textbox.disabled = false;
+                player2Textbox.disabled = false;
+        
+                levelTitle.style.display = "none";
+                levelRadio.forEach(level => {
+                    level.style.display = "none";
+                })
+                symbolTitle.style.display = "none";
+                symbolRadio.forEach(symbol => {
+                    symbol.style.display = "none";
+                })
+            }
+        
+        });
+        
     }
 
-    return {submitForm}
+    return {submitForm, animateCheckboxes}
 }
 
-const infoForm = InformationForm(document).submitForm();
-
-// checkbox 
-const checkbox = document.querySelector("#computer");
-const player1Textbox = document.querySelector("#name1")
-const player2Textbox = document.querySelector("#name2")
-const levelTitle = document.querySelector(".levelTitle");
-const levelRadio = Array.from(document.querySelectorAll(".level"));
-const symbolTitle = document.querySelector(".symbolTitle");
-const symbolRadio = Array.from(document.querySelectorAll(".symbol"));
-
-checkbox.addEventListener("change", function(e) {
-
-    if (e.target.checked) {
-        player1Textbox.value = null;
-        player2Textbox.value = null;
-        player1Textbox.disabled = true;
-        player2Textbox.disabled = true;
-
-        levelTitle.style.display = "block";
-        levelRadio.forEach(level => {
-            level.style.display = "block";
-        })
-        symbolTitle.style.display = "block";
-        symbolRadio.forEach(symbol => {
-            symbol.style.display = "block";
-        })
-    }
-    if (!e.target.checked) {
-        player1Textbox.disabled = false;
-        player2Textbox.disabled = false;
-
-        levelTitle.style.display = "none";
-        levelRadio.forEach(level => {
-            level.style.display = "none";
-        })
-        symbolTitle.style.display = "none";
-        symbolRadio.forEach(symbol => {
-            symbol.style.display = "none";
-        })
-    }
-
-});
-
+const infoForm = InformationForm(document);
+infoForm.animateCheckboxes();
+infoForm.submitForm();
 
 
 
